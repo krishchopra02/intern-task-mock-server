@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mock Server App</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        text-align: center;
+      }
+
+      #app {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      button,
+      input {
+        padding: 10px;
+        margin: 10px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Mock Server App</h1>
+
+      <!-- Button to call /api/leaderboard -->
+      <button onclick="getLeaderboard()">Get Top 200 Users</button>
+      <br /><br />
+      <!-- Input field for country code -->
+      <input
+        type="text"
+        id="countryCode"
+        placeholder="Enter Country Code (2 characters)"
+        maxlength="2"
+      />
+      <button onclick="getLeaderboardByCountry()">
+        Get Country Leaderboard
+      </button>
+
+      <!-- Input field for user ID -->
+      <input type="text" id="userId" placeholder="Enter User ID" />
+      <button onclick="getUserById()">Get User by ID</button>
+
+      <!-- Display tables for results -->
+      <div id="resultTables"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      function getLeaderboard() {
+        axios
+          .get('/api/leaderboard')
+          .then((response) => displayResults(response.data))
+          .catch((error) => console.error(error))
+      }
+
+      function getLeaderboardByCountry() {
+        const countryCode = document
+          .getElementById('countryCode')
+          .value.toUpperCase()
+        if (countryCode.length === 2) {
+          axios
+            .get(`/api/leaderboard/${countryCode}`)
+            .then((response) => displayResults(response.data))
+            .catch((error) => console.error(error))
+        } else {
+          alert('Please enter a valid 2-character country code.')
+        }
+      }
+
+      function getUserById() {
+        const userId = document.getElementById('userId').value
+        axios
+          .get(`/api/user/${userId}`)
+          .then((response) => displayUser(response.data))
+          .catch((error) => console.error(error))
+      }
+
+      function displayResults(data) {
+        const resultTables = document.getElementById('resultTables')
+        resultTables.innerHTML = ''
+
+        if (data.length === 0) {
+          resultTables.innerHTML = '<p>No results found.</p>'
+          return
+        }
+
+        const table = document.createElement('table')
+        const thead = document.createElement('thead')
+        const tbody = document.createElement('tbody')
+
+        // Create header row using keys of the first object
+        const headerRow = document.createElement('tr')
+        Object.keys(data.users[0]).forEach((key) => {
+          const th = document.createElement('th')
+          th.textContent = key
+          headerRow.appendChild(th)
+        })
+        thead.appendChild(headerRow)
+
+        // Create data rows using values of each object
+        data.users.forEach((item) => {
+          const tr = document.createElement('tr')
+          Object.values(item).forEach((value) => {
+            const td = document.createElement('td')
+            td.textContent = value
+            tr.appendChild(td)
+          })
+          tbody.appendChild(tr)
+        })
+
+        table.appendChild(thead)
+        table.appendChild(tbody)
+        resultTables.appendChild(table)
+      }
+      const displayUser = (data) => {
+        const resultTables = document.getElementById('resultTables')
+        resultTables.innerHTML = ''
+
+        if (data.length === 0) {
+          resultTables.innerHTML = '<p>No results found.</p>'
+          return
+        }
+
+        const table = document.createElement('table')
+        const thead = document.createElement('thead')
+        const tbody = document.createElement('tbody')
+
+        // Create header row using keys of the first object
+        const headerRow = document.createElement('tr')
+        Object.keys(data.user).forEach((key) => {
+          const th = document.createElement('th')
+          th.textContent = key
+          headerRow.appendChild(th)
+        })
+        thead.appendChild(headerRow)
+
+        const tr = document.createElement('tr')
+        Object.values(data.user).forEach((value) => {
+          const td = document.createElement('td')
+          td.textContent = value
+          tr.appendChild(td)
+        })
+        tbody.appendChild(tr)
+
+        table.appendChild(thead)
+        table.appendChild(tbody)
+        resultTables.appendChild(table)
+      }
+    </script>
+  </body>
+</html>

@@ -15,10 +15,10 @@ const getUser = asyncWrapper(async (req, res, next) => {
     ],
   })
 
-  const user = users.filter((user) => {
+  const user = users.find((user) => {
     return user.dataValues.UID === userId
   })
-  if (!user || user.length === 0) {
+  if (!user) {
     return next(createCustomError(`No user with UID: ${userId}`, 404))
   }
   res.status(200).json({ user })
