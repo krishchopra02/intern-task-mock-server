@@ -14,12 +14,13 @@ app.use(express.json())
 //routes
 app.use('/leaderboard', leaderboardRoutes)
 app.use('/user', userRoutes)
-app.use(notFound)
-app.use(errorHandler)
 
 app.get('/', (res, req) => {
   res.status(200).send('<h1> Welcome </h1>')
 })
+app.use(notFound)
+app.use(errorHandler)
+
 const start = async () => {
   try {
     await connectDB()
