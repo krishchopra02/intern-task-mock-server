@@ -17,6 +17,9 @@ app.use('/user', userRoutes)
 app.use(notFound)
 app.use(errorHandler)
 
+app.get('/', (res, req) => {
+  res.status(200).send('<h1> Welcome </h1>')
+})
 const start = async () => {
   try {
     await connectDB()
