@@ -15,7 +15,7 @@ app.use(express.json())
 app.use('/leaderboard', leaderboardRoutes)
 app.use('/user', userRoutes)
 
-app.get('/', (res, req) => {
+app.get('/', (req, res) => {
   res.status(200).send('<h1> Welcome </h1>')
 })
 app.use(notFound)

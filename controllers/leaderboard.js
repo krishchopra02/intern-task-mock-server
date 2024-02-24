@@ -21,7 +21,7 @@ const displayLeaderBoard = asyncWrapper(async (req, res) => {
 
 const displayLeaderBoardByCountry = asyncWrapper(async (req, res, next) => {
   const { country } = req.params
-  const { limit } = req.query
+  let { limit } = req.query
   if (!limit) {
     limit = 200
   }
