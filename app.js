@@ -4,7 +4,7 @@ const leaderboardRoutes = require('./routes/leaderboard')
 const userRoutes = require('./routes/user')
 const notFound = require('./middleware/not-found')
 const errorHandler = require('./middleware/error')
-
+require('dotenv').config()
 const PORT = process.env.port || 5000
 const app = express()
 
